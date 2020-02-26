@@ -37,15 +37,4 @@ router.get('/', async function(req, res, next) {
   }
   res.json(response);
 });
-
-/* POST responses listing. */
-router.post('/', async function(req, res, next) {
-  try{
-    res.json(200);
-  }catch(error){
-    console.log(error);
-    res.json(500);
-  }
-});
-
 module.exports = router;
