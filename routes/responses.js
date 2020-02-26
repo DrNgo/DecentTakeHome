@@ -24,14 +24,14 @@ router.get('/', async function(req, res, next) {
     const web3 = new Web3(provider);
     let contract = new web3.eth.Contract(abi,address.address);
     // let contractInstance = contract.at();
-    let greeting = contract.events.Greeting().on('data', function(error, result) {
+    let greeting = contract.events.allEvents().on('data', function(error, result) {
       if (!error)
         console.log('results', result);
       else
         console.log('error: ', error);
     });
 
-    contract.methods.greet().call();
+    contract.methods.addString('test').call();
   } catch(err){
     console.log(err);
   }

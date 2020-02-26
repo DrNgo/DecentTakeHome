@@ -1,16 +1,29 @@
 import React, { Component } from 'react';
 import './App.css';
+import Web3 from "web3";
 
 class App extends Component {
   state = {
+    account: '',
+    contract: {},
     responses: [],
-    value: 'test'
+    value: ''
   };
 
   componentDidMount() {
     fetch('/responses')
         .then(res => res.json())
         .then(responses => this.setState({ responses }));
+    this.loadBlockchainData();
+  }
+
+  async loadBlockchainData() {
+    const web3 = new Web3(Web3.givenProvider || "http://localhost:8545");
+    const abi = await fetch('http://localhost:8888/api/DecentTakeHome/all?path=abi').then(res => res.json());
+    const address = await fetch('http://localhost:8888/api/DecentTakeHome/').then(res => res.json());
+    const accounts = await web3.eth.getAccounts();
+    let contract = new web3.eth.Contract(abi,address.address);
+    this.setState({ account: accounts[0], contract })
   }
 
   sendString = async () => {
