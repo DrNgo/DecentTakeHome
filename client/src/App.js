@@ -6,15 +6,33 @@ class App extends Component {
   state = {
     account: '',
     contract: {},
+    polling: false,
     responses: [],
     value: ''
   };
 
   componentDidMount() {
+    this.loadResponses();
+    this.loadBlockchainData();
+  }
+
+  poll () {
+    this.state.polling && clearTimeout(this.state.polling);
+
+    const polling = setTimeout(() => {
+          this.loadResponses();
+          this.poll();
+        },1000);
+
+    this.setState({
+      polling
+    })
+  }
+
+  async loadResponses() {
     fetch('/responses')
         .then(res => res.json())
         .then(responses => this.setState({ responses }));
-    this.loadBlockchainData();
   }
 
   async loadBlockchainData() {
@@ -22,22 +40,20 @@ class App extends Component {
     const abi = await fetch('http://localhost:8888/api/DecentTakeHome/all?path=abi').then(res => res.json());
     const address = await fetch('http://localhost:8888/api/DecentTakeHome/').then(res => res.json());
     const accounts = await web3.eth.getAccounts();
-    let contract = new web3.eth.Contract(abi,address.address);
+    let contract = new web3.eth.Contract(abi[0],address.address);
     this.setState({ account: accounts[0], contract })
   }
 
   sendString = async () => {
-    const rawResponse = await fetch('/responses', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({newString: this.state.value})
-    });
-    const content = await rawResponse.json();
-
-    console.log(content);
+    try{
+      await this.state.contract.methods.addString(this.state.value).send({
+        from: this.state.account
+      });
+      if(!this.state.polling)
+        this.poll();
+    }catch(error){
+      console.log(error);
+    }
   };
 
   setString = (newString) => {
@@ -51,7 +67,7 @@ class App extends Component {
         <div className="App">
           <h1>Strings</h1>
           {this.state.responses.map(response =>
-              <div key={response.id}>{response.string}</div>
+              <div key={response.id}>Original: {response.string} Transformed: {response.transformed}</div>
           )}
           <input onChange={e => this.setString(e.target.value)} />
           <button onClick={this.sendString}>submit</button>
