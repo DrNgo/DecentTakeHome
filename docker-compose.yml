@@ -5,7 +5,9 @@ services:
     ports:
       - "8545:8545"
   truffle:
-    image: gjeanmart/truffle-docker
+    build:
+      context: .
+      dockerfile: ./truffle-dockerfile
     ports:
       - "8888:8888"
     volumes:
