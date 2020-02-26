@@ -4,3 +4,11 @@ services:
     image: trufflesuite/ganache-cli:latest
     ports:
       - "8545:8545"
+  truffle:
+    image: gjeanmart/truffle-docker
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./smartContract:/project
+    depends_on:
+      - ganache

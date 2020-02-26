@@ -3,11 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "PORT=3001 node ./bin/www",
+    "start": "concurrently \"PORT=3001 node ./bin/www\" \"cd client && npm start\"",
     "start:dev": "PORT=3001 nodemon --inspect --watch routes ./bin/www"
   },
   "dependencies": {
     "abi-decoder": "^2.3.0",
+    "concurrently": "^5.1.0",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.16.1",
@@ -15,6 +16,8 @@
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
     "morgan": "~1.9.1",
+    "node-fetch": "^2.6.0",
+    "requestify": "^0.2.5",
     "solc": "^0.6.3",
     "web3": "^1.2.6"
   },

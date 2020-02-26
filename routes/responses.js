@@ -1,5 +1,7 @@
 var express = require('express');
 var router = express.Router();
+const fetch = require('node-fetch');
+
 let response = [{
   id: 1,
   string: "samsepi0l"
@@ -10,36 +12,17 @@ let response = [{
 let id = 3;
 
 /* GET responses listing. */
-router.get('/', function(req, res, next) {
-  const fs = require("fs"),
-      abiDecoder = require('abi-decoder'),
-      Web3 = require('web3'),
-      solc = require('solc');
-  const path=require('path');
-  const contractPath = path.resolve(__dirname,'..','smartContract','contracts','HelloWorldContract.sol');
-  const output = JSON.parse(solc.compile(JSON.stringify({
-    language: "Solidity",
-    sources: {
-      "HelloWorldContract.sol": {
-        content: fs.readFileSync(contractPath, 'utf8')
-      }
-    },
-    settings: {
-      outputSelection: {
-        "*": {
-          "*": ["abi","evm.bytecode"]
-        }
-      }
-    }
-  })));
-  const bytecode = output.contracts['HelloWorldContract.sol'].HelloWorldContract.evm.bytecode;
-  const abi = output.contracts['HelloWorldContract.sol'].HelloWorldContract.abi;
-  abiDecoder.addABI(abi);
+router.get('/', async function(req, res, next) {
+  const Web3 = require('web3')
+
   try{
+    const abi = await fetch('http://localhost:8888/api/DecentTakeHome/all?path=abi').then(res => res.json());
+    const address = await fetch('http://localhost:8888/api/DecentTakeHome/').then(res => res.json());
+
     let provider = new Web3.providers.HttpProvider("http://localhost:8545");
 
     const web3 = new Web3(provider);
-    let contract = new web3.eth.Contract(abi,'0xcF5E267D3E67807346A2D297C7Ce347BBd9D86a1');
+    let contract = new web3.eth.Contract(abi,address.address);
     // let contractInstance = contract.at();
     let greeting = contract.events.Greeting().on('data', function(error, result) {
       if (!error)
