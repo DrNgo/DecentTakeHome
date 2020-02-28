@@ -6,7 +6,6 @@ class App extends Component {
   state = {
     account: '',
     contract: {},
-    polling: false,
     responses: [],
     value: ''
   };
@@ -14,19 +13,14 @@ class App extends Component {
   componentDidMount() {
     this.loadResponses();
     this.loadBlockchainData();
+    this.poll();
   }
 
   poll () {
-    this.state.polling && clearTimeout(this.state.polling);
-
-    const polling = setTimeout(() => {
-          this.loadResponses();
-          this.poll();
-        },1000);
-
-    this.setState({
-      polling
-    })
+    setTimeout(() => {
+      this.loadResponses();
+      this.poll();
+    },1000);
   }
 
   async loadResponses() {
@@ -49,8 +43,6 @@ class App extends Component {
       await this.state.contract.methods.addString(this.state.value).send({
         from: this.state.account
       });
-      if(!this.state.polling)
-        this.poll();
     }catch(error){
       console.log(error);
     }
