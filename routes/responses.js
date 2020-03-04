@@ -7,7 +7,7 @@ let contract;
 
 let response = [];
 
-async function setupContract(){
+async function setupResponses(){
   try{
     const abi = await fetch('http://localhost:8888/api/DecentTakeHome/all?path=abi').then(res => res.json());
     const address = await fetch('http://localhost:8888/api/DecentTakeHome/').then(res => res.json());
@@ -39,4 +39,4 @@ async function setupContract(){
 
 
 
-module.exports = setupContract;
+module.exports = setupResponses;

@@ -5,7 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 
-async function setupResponseRouter() {
+async function setupRouter() {
   try{
     var app = express();
 
@@ -45,4 +45,4 @@ async function setupResponseRouter() {
   }
 
 }
-module.exports = setupResponseRouter;
+module.exports = setupRouter;

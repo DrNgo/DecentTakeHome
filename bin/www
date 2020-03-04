@@ -4,7 +4,6 @@
  * Module dependencies.
  */
 var appSetup = require('../app');
-var app;
 
 var debug = require('debug')('decent-take-home:server');
 var http = require('http');
