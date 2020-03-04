@@ -26,14 +26,17 @@ async function setupContract(){
               .update(result.returnValues.id+result.returnValues.content, 'utf-8')
               .digest('hex')});
     });
+    /* GET responses listing. */
+    router.get('/', async function(req, res, next) {
+      res.json(response);
+    });
+    return router;
   } catch(err){
     console.log('error in setting up contract: ', err);
   }
+
 }
 
-/* GET responses listing. */
-router.get('/', async function(req, res, next) {
-  res.json(response);
-});
-setupContract();
-module.exports = router;
+
+
+module.exports = setupContract;
