@@ -3,7 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
+var responsesRouter = require('./routes/responses');
 
 async function setupRouter() {
   try{
@@ -18,6 +18,8 @@ async function setupRouter() {
     app.use(express.urlencoded({ extended: false }));
     app.use(cookieParser());
     app.use(express.static(path.join(__dirname, 'public')));
+
+    app.use('/responses', await responsesRouter());
 
     // catch 404 and forward to error handler
     app.use(function(req, res, next) {
@@ -34,11 +36,7 @@ async function setupRouter() {
       res.status(err.status || 500);
       res.render('error');
     });
-
-    var responsesRouter = require('./routes/responses');
-
-    var responses = await responsesRouter();
-    app.use('/responses', responses);
+    console.log('finish setting up app');
     return app;
   }catch(err){
     console.log('error in app.js', err);
