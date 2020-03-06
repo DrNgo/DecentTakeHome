@@ -24,9 +24,13 @@ class App extends Component {
   }
 
   async loadResponses() {
-    fetch('/responses')
-        .then(res => res.json())
-        .then(responses => this.setState({ responses }));
+    let response = await fetch('/responses');
+    let body = await response.json();
+    if(!response.ok){
+      console.log("error with fetching response: ", body.message);
+    }else {
+      this.setState({ responses: body });
+    }
   }
 
   async loadBlockchainData() {
