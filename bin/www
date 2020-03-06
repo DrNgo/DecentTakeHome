@@ -30,8 +30,6 @@ appSetup().then(app => {
   server.listen(port);
   server.on('error', onError);
   server.on('listening', onListening(server));
-  console.log('finish setup server');
-
 }).catch(error => {
   console.log('error in www', error);
 });

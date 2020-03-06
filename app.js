@@ -24,8 +24,6 @@ async function setupRouter() {
       res.json(err);
     });
 
-    console.log('finish setting up app');
-
     return app;
   }catch(err){
     console.log('error in app.js', err);
